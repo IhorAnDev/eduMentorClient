@@ -1,9 +1,9 @@
 'use client';
 
-import type { Route } from 'next';
 import { SignInResponse, signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
-import router from 'next/router';
+import { Route } from "@/routers/types"
+
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
@@ -37,7 +37,7 @@ export default function LoginForm() {
           alert('Could not login! Please check your credentials.');
         else alert(`Internal Server Error: ${res.error}`);
       } else if (callbackUrl) router.push(callbackUrl as Route);
-      else router.push('/');
+      else router.push('/company');
     });
     return false;
   }

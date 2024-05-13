@@ -121,7 +121,6 @@ export const config = {
   },
   callbacks: {
     async jwt({ token, user, account }) {
-      console.log('account => ', account);
       if (account && user?.accessToken) {
         const decodedAccessToken = JSON.parse(
           Buffer.from(user.accessToken.split('.')[1], 'base64').toString()
@@ -129,11 +128,10 @@ export const config = {
 
         if (decodedAccessToken) {
           token.email = decodedAccessToken.sub as string;
-          token.accessTokenExpires = decodedAccessToken.exp;
+          token.accessTokenExpires = decodedAccessToken.exp * 1000;
         }
         token.role = user.role || 'Unknown';
       }
-
       if (
         token.accessTokenExpires &&
         Date.now() > Number(token.accessTokenExpires)
