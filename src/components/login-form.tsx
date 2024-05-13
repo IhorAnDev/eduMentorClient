@@ -1,12 +1,12 @@
 'use client';
 
-import { SignInResponse, signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
-import { Route } from "@/routers/types"
-
+import { signIn, SignInResponse } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   async function login(event: any) {
     event.preventDefault();
@@ -15,9 +15,8 @@ export default function LoginForm() {
     const email = formData.get('email');
     const password = formData.get('password');
 
-    console.log(email, password);
     // whatever your type
-    const callbackUrl = searchParams.get('/company');
+    const callbackUrl = searchParams.get('callbackUrl');
     signIn('credentials', {
       email,
       password,
@@ -27,17 +26,17 @@ export default function LoginForm() {
         alert('No response!');
         return;
       }
-
       if (!res.ok) alert('Something went wrong!');
       else if (res.error) {
         console.log(res.error);
 
-        // eslint-disable-next-line eqeqeq
         if (res.error == 'CallbackRouteError')
           alert('Could not login! Please check your credentials.');
         else alert(`Internal Server Error: ${res.error}`);
-      } else if (callbackUrl) router.push(callbackUrl as Route);
-      else router.push('/company');
+      } else {
+        if (callbackUrl) router.push(callbackUrl);
+        else router.push('/company');
+      }
     });
     return false;
   }
