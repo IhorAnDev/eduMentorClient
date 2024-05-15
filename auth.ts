@@ -5,6 +5,11 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 
 import env from '@/env/index';
 import { privateRoutes } from '@/contains/constants'; // an array like ["/", "/account"]
+import {
+  Credentials,
+  LoginCredentials,
+  RegistrationCredentials,
+} from '@/types';
 
 // @ts-ignore
 async function refreshAccessToken(token) {
@@ -59,20 +64,41 @@ export const config = {
           type: 'email',
           placeholder: 'jsmith@example.com',
         },
-        password: {
-          label: 'password',
+        password: { label: 'password', type: 'password' },
+        type: { label: 'type', type: 'hidden' },
+        firstName: { label: 'firstName', type: 'text', optional: true },
+        lastName: { label: 'lastName', type: 'text', optional: true },
+        confirmPassword: {
+          label: 'confirmPassword',
           type: 'password',
+          optional: true,
         },
       },
 
       async authorize(credentials, req) {
-        const payload = {
-          email: credentials.email,
-          password: credentials.password,
-        };
+        console.log('credentials => ', credentials);
+        const { email, password, type } = credentials as Credentials;
+        let endpoint = `${env.API_BASE_URL}/auth/signin`;
+        let payload: LoginCredentials | RegistrationCredentials;
+
+        if (type === 'register') {
+          const { firstName, lastName, confirmPassword } =
+            credentials as RegistrationCredentials;
+          endpoint = `${env.API_BASE_URL}/auth/signup`;
+          payload = {
+            email,
+            password,
+            confirmPassword,
+            firstName,
+            lastName,
+            type: 'register',
+          };
+        } else {
+          payload = { email, password, type: 'login' };
+        }
 
         // external api for users to log in, change it with your own endpoint
-        const res = await fetch(`${env.API_BASE_URL}/auth/signin`, {
+        const res = await fetch(endpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -92,15 +118,14 @@ export const config = {
 
           const adaptUser = {
             ...user,
+            firstName: user.name as string,
             email: user.email as string,
             accessToken: user.token as string,
-            refreshToken: user.refreshToken as string,
           };
 
           // we set http only cookie here to store refresh token information as we will not append it to our session to avoid maximum size warning for the session cookie (4096 bytes)
           cookies().set({
             name: `${prefix}xxx.refresh-token`,
-            value: adaptUser.refreshToken,
             httpOnly: true,
             sameSite: 'strict',
             secure: true,
@@ -119,6 +144,7 @@ export const config = {
   pages: {
     signIn: '/login',
   },
+
   callbacks: {
     async jwt({ token, user, account }) {
       if (account && user?.accessToken) {
@@ -157,15 +183,23 @@ export const config = {
         error: token.error,
       };
     },
-    authorized({ request, auth }) {
+    async authorized({ request, auth }) {
       const { pathname } = request.nextUrl;
-      const isLoginPage =
-        pathname.startsWith('/login') ||
-        pathname.startsWith('/forgot-password') ||
-        pathname.startsWith('/signup');
+      const isLoginPage = pathname.startsWith('/login');
+      const isSignupPage = pathname.startsWith('/signup');
 
-      if (isLoginPage && auth) {
+      if ((isLoginPage || isSignupPage) && auth) {
         return Response.redirect(new URL('/company', request.nextUrl));
+      }
+
+      if (isSignupPage || isLoginPage) {
+        return true; // Allow access to login and signup pages
+      }
+
+      if (!auth) {
+        return Response.redirect(
+          new URL(`/login?callbackUrl=${request.nextUrl}`, request.nextUrl)
+        );
       }
 
       return !!auth;

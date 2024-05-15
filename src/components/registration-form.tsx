@@ -1,6 +1,57 @@
+'use client';
+import { FormEvent } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { signIn, SignInResponse } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
 export default function RegistrationForm() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  function register(e: any) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    const firstName = formData.get('firstName') as string;
+    const lastName = formData.get('lastName') as string;
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    const confirmPassword = formData.get('confirmPassword') as string;
+
+
+    signIn('credentials', {
+      firstName,
+      lastName,
+      email,
+      password,
+      confirmPassword,
+      redirect: false,
+      type: 'register',
+    }).then((res: SignInResponse | undefined) => {
+      if (!res) {
+        alert('No response!');
+        return;
+      }
+      if (!res.ok) alert('Something went wrong!');
+      else if (res.error) {
+        console.log(res.error);
+
+        if (res.error == 'CallbackRouteError')
+          alert('Could not login! Please check your credentials.');
+        else alert(`Internal Server Error: ${res.error}`);
+      } else {
+        if (searchParams.get('callbackUrl')) {
+          router.push(searchParams.get('callbackUrl') as string);
+        } else {
+          router.push('/company');
+        }
+      }
+    });
+    return false;
+  }
+
   return (
-    <form className="space-y-6" action="/api/route" method="POST">
+    <form className="space-y-6" onSubmit={e => register(e)} method="POST">
       <div>
         <label
           htmlFor="firstName"
@@ -10,8 +61,8 @@ export default function RegistrationForm() {
         </label>
         <div className="mt-2">
           <input
-            id="name"
-            name="name"
+            id="firstName"
+            name="firstName"
             type="text"
             autoComplete="name"
             required
@@ -31,7 +82,7 @@ export default function RegistrationForm() {
             id="lastName"
             name="lastName"
             type="text"
-            autoComplete="name"
+            autoComplete="firstName"
             required
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
@@ -89,8 +140,8 @@ export default function RegistrationForm() {
         </div>
         <div className="mt-2">
           <input
-            id="password"
-            name="password"
+            id="confirmPassword"
+            name="confirmPassword"
             type="password"
             autoComplete="current-password"
             required
@@ -98,7 +149,7 @@ export default function RegistrationForm() {
           />
         </div>
       </div>
-
+      <input type="hidden" name="type" value="register" />
       <div>
         <button
           type="submit"

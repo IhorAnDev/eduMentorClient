@@ -12,8 +12,8 @@ export default function LoginForm() {
     event.preventDefault();
     const formData = new FormData(event.target);
 
-    const email = formData.get('email');
-    const password = formData.get('password');
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
 
     // whatever your type
     const callbackUrl = searchParams.get('callbackUrl');
@@ -21,6 +21,7 @@ export default function LoginForm() {
       email,
       password,
       redirect: false,
+      type: 'login',
     }).then((res: SignInResponse | undefined) => {
       if (!res) {
         alert('No response!');
@@ -82,12 +83,13 @@ export default function LoginForm() {
           />
         </div>
       </div>
+      <input type="hidden" name="type" value="login" />
       <div>
         <button
           type="submit"
           className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
-          Sign up
+          Sign in
         </button>
       </div>
     </form>

@@ -1,6 +1,6 @@
+import RegistrationForm from '@/components/registration-form';
 import Link from 'next/link';
 
-import RegistrationForm from '../ui/registration-form';
 
 export default function RegistrationPage() {
   return (

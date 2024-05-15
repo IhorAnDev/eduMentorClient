@@ -32,3 +32,20 @@ export interface CurrentUserProps {
     isAdmin: boolean;
   } | null;
 }
+
+export type LoginCredentials = {
+  email: string;
+  password: string;
+  type: string;
+};
+
+export type RegistrationCredentials = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  firstName: string;
+  lastName: string;
+  type: string;
+};
+
+export type Credentials = LoginCredentials | RegistrationCredentials;
