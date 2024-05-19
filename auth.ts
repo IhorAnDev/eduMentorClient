@@ -2,7 +2,6 @@ import { cookies, headers } from 'next/headers';
 import NextAuth from 'next-auth';
 import type { NextAuthConfig } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-
 import env from '@/env/index';
 import { privateRoutes } from '@/contains/constants'; // an array like ["/", "/account"]
 import {
@@ -76,7 +75,6 @@ export const config = {
       },
 
       async authorize(credentials, req) {
-        console.log('credentials => ', credentials);
         const { email, password, type } = credentials as Credentials;
         let endpoint = `${env.API_BASE_URL}/auth/signin`;
         let payload: LoginCredentials | RegistrationCredentials;
@@ -120,12 +118,20 @@ export const config = {
             ...user,
             firstName: user.name as string,
             email: user.email as string,
-            accessToken: user.token as string,
           };
 
-          // we set http only cookie here to store refresh token information as we will not append it to our session to avoid maximum size warning for the session cookie (4096 bytes)
+          cookies().set({
+            name: `${prefix}xxx.access-token`,
+            value: user.token,
+            httpOnly: true,
+            sameSite: 'strict',
+            secure: true,
+          });
+
+          
           cookies().set({
             name: `${prefix}xxx.refresh-token`,
+            value: user.refreshToken,
             httpOnly: true,
             sameSite: 'strict',
             secure: true,
@@ -139,7 +145,8 @@ export const config = {
     }),
   ],
   // this is required
-  secret: process.env.AUTH_SECRET,
+  
+  secret: env.AUTH_SECRET,
   // our custom login page
   pages: {
     signIn: '/login',
@@ -147,41 +154,38 @@ export const config = {
 
   callbacks: {
     async jwt({ token, user, account }) {
-      if (account && user?.accessToken) {
+      if (account && user?.token) {
         const decodedAccessToken = JSON.parse(
-          Buffer.from(user.accessToken.split('.')[1], 'base64').toString()
+          Buffer.from(user.token.split('.')[1], 'base64').toString()
         );
 
         if (decodedAccessToken) {
           token.email = decodedAccessToken.sub as string;
           token.accessTokenExpires = decodedAccessToken.exp * 1000;
         }
+        token.id = user.id as string;
+        token.accessToken = user.token as string;
+        token.refreshToken = user.refreshToken as string;
         token.role = user.role || 'Unknown';
       }
+
       if (
         token.accessTokenExpires &&
-        Date.now() > Number(token.accessTokenExpires)
+        Date.now() < Number(token.accessTokenExpires)
       ) {
-        return await refreshAccessToken(token);
+        const { refreshedToken, ...rest } = token;
+        return rest;
       }
 
-      return token;
+      return await refreshAccessToken(token);
     },
 
     async session({ session, token }) {
-      console.log('session => ', session);
-
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          email: token.email as string,
-          accessToken: token.accessToken as string,
-          accessTokenExpires: token.accessTokenExpires as number,
-          role: (token.role as string) || 'Unknown',
-        },
-        error: token.error,
-      };
+      session.user.token = token.accessToken as string;
+      session.user.refreshToken = token.refreshToken as string;
+      session.error = token.error;
+      session.accessToken = token.accessToken as string;
+      return session;
     },
     async authorized({ request, auth }) {
       const { pathname } = request.nextUrl;
@@ -193,7 +197,7 @@ export const config = {
       }
 
       if (isSignupPage || isLoginPage) {
-        return true; // Allow access to login and signup pages
+        return true;
       }
 
       if (!auth) {

@@ -5,7 +5,7 @@ declare module 'next-auth' {
     id: string;
     email: string;
     cognitoGroups: string[];
-    accessToken: string;
+    token: string;
     refreshToken: string;
     idToken: string;
     exp: number;
@@ -15,6 +15,7 @@ declare module 'next-auth' {
   interface Session {
     user: User & DefaultSession['user'];
     expires: string;
-    error: string;
+    error: string | any;
+    accessToken: string;
   }
 }

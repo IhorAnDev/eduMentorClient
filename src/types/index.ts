@@ -19,6 +19,15 @@ export type IToken = {
   refreshToken?: string;
 };
 
+export type Company = {
+  name: string;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  email: string;
+  image: string;
+  description: string;
+};
 export interface CurrentUserProps {
   currentUser?: {
     createdAt: string;
