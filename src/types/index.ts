@@ -19,15 +19,6 @@ export type IToken = {
   refreshToken?: string;
 };
 
-export type Company = {
-  name: string;
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  email: string;
-  image: string;
-  description: string;
-};
 export interface CurrentUserProps {
   currentUser?: {
     createdAt: string;
@@ -58,3 +49,18 @@ export type RegistrationCredentials = {
 };
 
 export type Credentials = LoginCredentials | RegistrationCredentials;
+
+export interface Company {
+  companyId: number;
+  companyName: string;
+  ownerId: number;
+  ownerEmail: string;
+  companyStudents: CompanyStudent[];
+}
+
+export type CompanyStudent = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+};

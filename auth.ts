@@ -3,7 +3,7 @@ import NextAuth from 'next-auth';
 import type { NextAuthConfig } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import env from '@/env/index';
-import { privateRoutes } from '@/contains/constants'; // an array like ["/", "/account"]
+import { prefix } from '@/config/index';
 import {
   Credentials,
   LoginCredentials,
@@ -14,32 +14,31 @@ import {
 async function refreshAccessToken(token) {
   console.log('Now refreshing the expired token...');
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/refresh`,
-      {
-        method: 'POST',
-        headers: headers(),
-        body: JSON.stringify({ email: token.email }),
-      }
-    );
+    const res = await fetch(`${env.API_BASE_URL}/auth/refresh`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+      body: JSON.stringify({ refreshToken: token.refreshToken }),
+    });
 
-    const { success, data } = await response.json();
+    const data = await res.json();
 
-    if (!success) {
+    if (!res.ok) {
       console.log('The token could not be refreshed!');
-      throw data;
+      throw new Error('Token refresh failed');
     }
-
     console.log('The token has been refreshed successfully.');
     const decodedAccessToken = JSON.parse(
-      Buffer.from(data.accessToken.split('.')[1], 'base64').toString()
+      Buffer.from(data.token.split('.')[1], 'base64').toString()
     );
 
     return {
       ...token,
-      accessToken: data.accessToken,
+      accessToken: data.token,
       refreshToken: data.refreshToken ?? token.refreshToken,
-      accessTokenExpires: decodedAccessToken.exp,
+      accessTokenExpires: decodedAccessToken.exp * 1000,
       error: '',
     };
   } catch (error) {
@@ -47,7 +46,6 @@ async function refreshAccessToken(token) {
     return { ...token, error: 'RefreshAccessTokenError' };
   }
 }
-
 export const config = {
   trustHost: true,
   theme: {
@@ -112,8 +110,6 @@ export const config = {
         }
 
         if (res.ok && user) {
-          const prefix = process.env.NODE_ENV === 'development' ? '__Dev-' : '';
-
           const adaptUser = {
             ...user,
             firstName: user.name as string,
@@ -125,10 +121,10 @@ export const config = {
             value: user.token,
             httpOnly: true,
             sameSite: 'strict',
-            secure: true,
+            secure: process.env.NODE_ENV !== 'development',
+            path: '/',
           });
 
-          
           cookies().set({
             name: `${prefix}xxx.refresh-token`,
             value: user.refreshToken,
@@ -145,7 +141,7 @@ export const config = {
     }),
   ],
   // this is required
-  
+
   secret: env.AUTH_SECRET,
   // our custom login page
   pages: {
@@ -187,6 +183,7 @@ export const config = {
       session.accessToken = token.accessToken as string;
       return session;
     },
+
     async authorized({ request, auth }) {
       const { pathname } = request.nextUrl;
       const isLoginPage = pathname.startsWith('/login');

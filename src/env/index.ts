@@ -15,6 +15,7 @@ const NEXTAUTH_SECRET = getEnvSafely('NEXTAUTH_SECRET');
 const AUTH_SECRET = getEnvSafely('AUTH_SECRET');
 const API_BASE_URL = getEnvSafely('API_BASE_URL');
 const NEXTAUTH_URL_INTERNAL = getEnvSafely('NEXTAUTH_URL_INTERNAL');
+const NEXT_PUBLIC_API_BASE_URL = getEnvSafely('NEXT_PUBLIC_API_BASE_URL');
 
 const env = {
   MONGODB_URI,
@@ -29,6 +30,7 @@ const env = {
   AUTH_SECRET,
   API_BASE_URL,
   NEXTAUTH_URL_INTERNAL,
+  NEXT_PUBLIC_API_BASE_URL,
 };
 
 export default env;
