@@ -54,8 +54,7 @@ export interface Company {
   companyId: number;
   companyName: string;
   ownerId: number;
-  ownerEmail: string;
-  companyStudents: CompanyStudent[];
+  companyCourses: any[];
 }
 
 export type CompanyStudent = {

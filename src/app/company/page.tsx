@@ -1,9 +1,9 @@
 import { Company } from '@/types';
 import env from '@/env/index';
 import { getTokenFromCookies } from '@/lib/api';
+import CompanyPageClient from '@/components/company/Company';
 
 async function fetchCompany(): Promise<Company> {
-
   const response = await fetch(`${env.NEXT_PUBLIC_API_BASE_URL}/api/company`, {
     method: 'GET',
     credentials: 'include',
@@ -11,7 +11,7 @@ async function fetchCompany(): Promise<Company> {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
       Authorization: `Bearer ${await getTokenFromCookies()}`,
-    }
+    },
   });
 
   if (!response.ok) {
@@ -22,18 +22,7 @@ async function fetchCompany(): Promise<Company> {
 }
 
 export default async function Page() {
-  try {
-    const company = await fetchCompany();
-    return (
-      <div className="text-3xl text-red-500">
-        Company: {company.companyName}
-      </div>
-    );
-  } catch (error: any) {
-    return (
-      <div className="text-3xl text-red-500">
-        Failed to load company data: {error.message}
-      </div>
-    );
-  }
+  const company = await fetchCompany();
+
+  return <CompanyPageClient company={company} />;
 }
