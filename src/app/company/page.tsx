@@ -2,6 +2,7 @@ import { Company } from '@/types';
 import env from '@/env/index';
 import { getTokenFromCookies } from '@/lib/api';
 import CompanyPageClient from '@/components/company/Company';
+import { companyMock } from '@/components/company/company-mock';
 
 async function fetchCompany(): Promise<Company> {
   const response = await fetch(`${env.NEXT_PUBLIC_API_BASE_URL}/api/company`, {
@@ -15,7 +16,8 @@ async function fetchCompany(): Promise<Company> {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to fetch company data....');
+    return companyMock.companyState;
+    // throw new Error('Failed to fetch company data....');
   }
 
   return response.json();
