@@ -1,3 +1,5 @@
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export const cx = (...classNames: unknown[]) =>
   classNames.filter(Boolean).join(' ');
@@ -10,3 +12,7 @@ export const myLoader = ({ src }: any) => {
 // display numbers with comma (form string)
 export const displayNumbers = (num: number): string =>
   num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+export const cn = (...inputs: ClassValue[]) => {
+  return twMerge(clsx(inputs));
+};

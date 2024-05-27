@@ -1,15 +1,13 @@
-import MainLayout from '@/layouts/MainLayout/MainLayout';
-
 export default function Home() {
   return (
-    <MainLayout>
-      <section className="p-8 flex flex-col h-full justify-center">
-        <h1 className="text-3xl font-bold font-poppins">Next Starter ⚡</h1>
-        <p className="text-lg">
-          A highly opinionated and complete starter for Next.js projects ready
-          to production
-        </p>
-      </section>
-    </MainLayout>
+    <>
+      <span className="font-bold text-4xl">Home</span>
+      <div className="border-dashed border border-zinc-500 w-full h-12 rounded-lg"></div>
+      <div className="border-dashed border border-zinc-500 w-full h-64 rounded-lg"></div>
+      <div className="border-dashed border border-zinc-500 w-full h-64 rounded-lg"></div>
+      <div className="border-dashed border border-zinc-500 w-full h-64 rounded-lg"></div>
+      <div className="border-dashed border border-zinc-500 w-full h-64 rounded-lg"></div>
+      <div className="border-dashed border border-zinc-500 w-full h-64 rounded-lg"></div>
+    </>
   );
 }

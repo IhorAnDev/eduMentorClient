@@ -63,3 +63,11 @@ export type CompanyStudent = {
   lastName: string;
   email: string;
 };
+
+export type SideNavItem = {
+  title: string;
+  path: string;
+  icon?: JSX.Element;
+  submenu?: boolean;
+  subMenuItems?: SideNavItem[];
+};
