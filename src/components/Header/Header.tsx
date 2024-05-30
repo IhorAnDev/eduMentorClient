@@ -15,14 +15,15 @@ const Header = () => {
   return (
     <div
       className={cn(
-        `inset-x-0 top-0 w-full transition-all border-b border-gray-200`,
+        `inset-x-0 top-0 w-full transition-all bg-gray-500 border-b border-gray-200`,
         {
-          'border-b border-gray-200 bg-white/75 backdrop-blur-lg': scrolled,
-          'border-b border-gray-200 bg-white': selectedLayout,
-        },
+          'border-b border-gray-200 bg-gray-500/75 backdrop-blur-lg': scrolled,
+          'border-b border-gray-200 bg-gray-500': selectedLayout,
+        }
       )}
     >
       <div className="flex h-[47px] items-center justify-between px-4">
+        <span className="font-bold text-xl ml-4">Logo</span>
         <div className="flex items-center space-x-4">
           <Link
             href="/"
