@@ -36,7 +36,7 @@ export default function LoginForm() {
         else alert(`Internal Server Error: ${res.error}`);
       } else {
         if (callbackUrl) router.push(callbackUrl);
-        else router.push('/company');
+        else router.push('/dashboard');
       }
     });
     return false;

@@ -7,10 +7,16 @@ import { useSelectedLayoutSegment } from 'next/navigation';
 
 import useScroll from '@/hooks/useScroll';
 import { cn } from '@/lib/utils';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
 
 const Header = () => {
   const scrolled = useScroll(5);
   const selectedLayout = useSelectedLayoutSegment();
+
+  const companyName = useSelector(
+    (state: RootState) => state.company.companyName
+  );
 
   return (
     <div
@@ -23,7 +29,7 @@ const Header = () => {
       )}
     >
       <div className="flex h-[47px] items-center justify-between px-4">
-        <span className="font-bold text-xl ml-4">Logo</span>
+        <span className="font-bold text-xl  text-purple-300 ml-4">{companyName}</span>
         <div className="flex items-center space-x-4">
           <Link
             href="/"

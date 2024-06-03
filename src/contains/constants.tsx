@@ -6,7 +6,7 @@ import { SideNavItem } from '@/types';
 export const SIDENAV_ITEMS: SideNavItem[] = [
   {
     title: 'Home',
-    path: '/company',
+    path: '/dashboard',
     icon: <Icon icon="lucide:home" width="24" height="24" />,
   },
   {

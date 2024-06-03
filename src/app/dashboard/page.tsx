@@ -1,16 +1,22 @@
-'use client';
+import { Company } from '@/types';
+import env from '@/env/index';
+import { getTokenFromCookies, getAccessToken } from '@/lib/api';
+import CompanyPageClient from '@/components/company/Company';
+import { companyMock } from '@/components/company/company-mock';
 
-import Head from 'next/head';
+async function fetchCompany(): Promise<Company> {
+  const response = await getAccessToken();
 
-const page = () => {
-  return (
-    <div>
-      <Head>
-        <title>Dashboard</title>
-      </Head>
-      <h1 className="text-3xl font-bold text-red-500">Dashboard</h1>
-    </div>
-  );
-};
+  if (!response.ok) {
+    return companyMock.companyState;
+    // throw new Error('Failed to fetch company data....');
+  }
 
-export default page;
+  return response.json();
+}
+
+export default async function Page() {
+  const company = await fetchCompany();
+
+  return <CompanyPageClient company={company} />;
+}

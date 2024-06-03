@@ -190,7 +190,7 @@ export const config = {
       const isSignupPage = pathname.startsWith('/signup');
 
       if ((isLoginPage || isSignupPage) && auth) {
-        return Response.redirect(new URL('/company', request.nextUrl));
+        return Response.redirect(new URL('/dashboard', request.nextUrl));
       }
 
       if (isSignupPage || isLoginPage) {

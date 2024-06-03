@@ -9,17 +9,13 @@ import { companyMock } from '@/components/company/company-mock';
 
 const CompanyPageClient = ({ company }: { company: Company }) => {
   const dispatch = useDispatch<AppDispatch>();
-  // const companyState = useSelector((state: RootState) => state.company);
-  const { companyState } = companyMock;
 
   useEffect(() => {
     dispatch(setCompany(company));
   }, [company, dispatch]);
 
   return (
-    <div className="text-3xl text-red-500">
-      Company: {company.companyName || companyState.companyName}
-    </div>
+    <div className="text-3xl bg-red-500 text-red-500">Company: {company.companyName}</div>
   );
 };
 
