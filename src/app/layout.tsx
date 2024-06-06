@@ -25,16 +25,7 @@ export default async function RootLayout({ children }: ChildrenProps) {
     <StoreProvider>
       <html lang="en">
         <body className={`bg-white ${inter.className}`}>
-          <div className="flex">
-            <SideNav />
-            <main className="flex-1 transition-all duration-300">
-              <MarginWidthWrapper>
-                <Header />
-                <HeaderMobile />
-                <PageWrapper>{children}</PageWrapper>
-              </MarginWidthWrapper>
-            </main>
-          </div>
+          {children}
         </body>
       </html>
     </StoreProvider>

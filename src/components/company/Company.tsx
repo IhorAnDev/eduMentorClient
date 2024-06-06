@@ -14,9 +14,7 @@ const CompanyPageClient = ({ company }: { company: Company }) => {
     dispatch(setCompany(company));
   }, [company, dispatch]);
 
-  return (
-    <div className="text-3xl bg-red-500 text-red-500">Company: {company.companyName}</div>
-  );
+  return <div className="text-3xl">Company: {company.companyName}</div>;
 };
 
 export default CompanyPageClient;

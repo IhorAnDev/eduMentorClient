@@ -3,6 +3,7 @@ import env from '@/env/index';
 import { getTokenFromCookies, getAccessToken } from '@/lib/api';
 import CompanyPageClient from '@/components/company/Company';
 import { companyMock } from '@/components/company/company-mock';
+import CourseCard from '@/components/course/CourseCard';
 
 async function fetchCompany(): Promise<Company> {
   const response = await getAccessToken();
@@ -18,5 +19,7 @@ async function fetchCompany(): Promise<Company> {
 export default async function Page() {
   const company = await fetchCompany();
 
-  return <CompanyPageClient company={company} />;
+  return company.companyCourses.map(course => (
+    <CourseCard key={course.courseId} course={course} />
+  ));
 }

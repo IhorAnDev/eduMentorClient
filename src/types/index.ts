@@ -64,6 +64,12 @@ export type CompanyStudent = {
   email: string;
 };
 
+export type Course = {
+  courseId: number;
+  courseName: string;
+  courseDescription: string;
+  isEnabled: boolean;
+}
 export type SideNavItem = {
   title: string;
   path: string;
