@@ -16,6 +16,12 @@ export const companyMock = {
         courseDescription: 'Description second course',
         isEnabled: null,
       },
+      {
+        courseId: 3,
+        courseName: 'Admin Third course',
+        courseDescription: 'Description third course',
+        isEnabled: null,
+      },
     ],
   },
 };

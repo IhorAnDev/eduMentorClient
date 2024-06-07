@@ -7,7 +7,7 @@ import type { ChildrenProps } from '@/types';
 
 export default function CompanyLayout({ children }: ChildrenProps) {
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex">
       <SideNav />
       <main className="flex-1 transition-all duration-300">
         <MarginWidthWrapper>
