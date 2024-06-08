@@ -1,33 +1,40 @@
 import { Course } from '@/types';
 import Link from 'next/link';
-import Image from 'next/image'
-
+import Image from 'next/image';
+import env from '@/env/index';
 
 const CompanyCard = ({ course }: { course: Course }) => {
-  const { courseId, courseName, courseDescription } = course;
+  const { courseId, courseName, courseDescription, imageUrl } = course;
+  const serverUrl = env.API_BASE_URL || 'http://localhost:8085';
+  const fullImageUrl = imageUrl
+    ? `${serverUrl}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`
+    : '/images/learning.jpg';
+
   return (
-    <div className="max-w-sm bg-white  mr-4 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div className="max-w-sm w-72 h-96 bg-white mr-4 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col">
       <Link href="#">
-        <Image
-          width={400} 
-          height={200}
-          className="rounded-t-lg"
-          src="/images/learning.jpg"
-          alt="learn picture"
-        />
+        <div className="relative w-full h-52">
+          <Image
+            src={fullImageUrl}
+            alt={courseName}
+            fill
+            style={{ objectFit: 'contain' }}
+            className="rounded-t-lg"
+          />
+        </div>
       </Link>
-      <div className="p-5">
+      <div className="p-5 flex flex-col flex-grow">
         <Link href="#">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
             {courseName}
           </h5>
         </Link>
-        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-         {courseDescription}
+        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 flex-grow overflow-hidden">
+          {courseDescription}
         </p>
         <Link
           href="#"
-          className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="mt-auto inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           Apply now
           <svg

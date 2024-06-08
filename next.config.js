@@ -1,18 +1,16 @@
 /** @type {import('next').NextConfig} */
-/* const nextConfig = {
-  async headers() {
-    return [
+
+const nextConfig = {
+  images: {
+    remotePatterns: [
       {
-        source: '/login',
-        headers: [
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: process.env.NEXTAUTH_URL_INTERNAL,
-          },
-        ],
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '8085',
+        pathname: '/api/v1/images/**',
       },
-    ];
+    ],
   },
 };
 
-module.exports = nextConfig; */
+module.exports = nextConfig;

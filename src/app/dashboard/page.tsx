@@ -1,7 +1,5 @@
 import { Company } from '@/types';
-import env from '@/env/index';
-import { getTokenFromCookies, getAccessToken } from '@/lib/api';
-import CompanyPageClient from '@/components/company/Company';
+import { getAccessToken } from '@/lib/api';
 import { companyMock } from '@/components/company/company-mock';
 import CourseCard from '@/components/course/CourseCard';
 

@@ -69,7 +69,8 @@ export type Course = {
   courseName: string;
   courseDescription: string;
   isEnabled: boolean;
-}
+  imageUrl: string;
+};
 export type SideNavItem = {
   title: string;
   path: string;
