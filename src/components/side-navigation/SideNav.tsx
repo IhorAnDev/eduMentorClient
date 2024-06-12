@@ -23,7 +23,7 @@ const SideNav = () => {
   return (
     <div
       className={cx(
-        'group bg-gray-700 h-screen fixed border-r border-zinc-200 transition-all duration-300',
+        'group bg-gray-700 h-screen fixed border-r border-zinc-200 transition-all duration-300 z-20',
         hover ? 'w-60' : 'w-16'
       )}
       onMouseEnter={() => dispatch(setHover(true))}

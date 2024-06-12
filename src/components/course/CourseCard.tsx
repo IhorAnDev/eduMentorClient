@@ -11,11 +11,11 @@ const CompanyCard = ({ course }: { course: Course }) => {
     : '/images/learning.jpg';
 
   return (
-    <div className="max-w-sm w-72 h-96 bg-white mr-4 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col">
+    <div className="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col"> 
       <Link href="#">
         <div className="relative w-full h-52">
           <Image
-            src={fullImageUrl}
+            src={fullImageUrl }
             alt={courseName}
             fill
             style={{ objectFit: 'contain' }}
