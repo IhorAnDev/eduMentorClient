@@ -4,9 +4,6 @@ import { companyMock } from '@/components/company/company-mock';
 import CourseCard from '@/components/course/CourseCard';
 
 async function fetchCompany(): Promise<Company> {
-  // TODO remove the delay
-  console.log('Fetching company data...');
-  await new Promise((resolve) => setTimeout(resolve, 5000)); 
   const response = await getAccessToken();
   if (!response.ok) {
     return companyMock.companyState;
