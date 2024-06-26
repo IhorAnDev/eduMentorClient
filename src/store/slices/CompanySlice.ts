@@ -1,4 +1,3 @@
-// src/store/slices/companySlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Company } from '@/types';
 

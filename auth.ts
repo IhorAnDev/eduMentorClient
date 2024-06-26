@@ -1,3 +1,4 @@
+'use server';
 import { cookies, headers } from 'next/headers';
 import NextAuth from 'next-auth';
 import type { NextAuthConfig } from 'next-auth';
@@ -14,25 +15,27 @@ import {
 async function refreshAccessToken(token) {
   console.log('Now refreshing the expired token...');
   try {
-    const res = await fetch(`${env.API_BASE_URL}/auth/refresh`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-      body: JSON.stringify({ refreshToken: token.refreshToken }),
-    });
+    const res = await fetch(
+      `${env.NEXT_PUBLIC_API_BASE_URL}/api/auth/refresh`,
+      {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify({ refreshToken: token.refreshToken }),
+      }
+    );
 
     const data = await res.json();
 
     if (!res.ok) {
       console.log('The token could not be refreshed!');
-      throw new Error('Token refresh failed');
+      throw new Error('Token refresh failed', { cause: data.error });
     }
-    console.log('The token has been refreshed successfully.');
+
     const decodedAccessToken = JSON.parse(
       Buffer.from(data.token.split('.')[1], 'base64').toString()
     );
+
+    console.log('The token has been refreshed successfully.');
 
     return {
       ...token,

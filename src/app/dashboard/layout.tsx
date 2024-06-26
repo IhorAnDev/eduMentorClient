@@ -2,6 +2,7 @@ import Header from '@/components/Header/Header';
 import HeaderMobile from '@/components/Header/HeaderMobile';
 import MarginWidthWrapper from '@/components/MarginWithWrapper';
 import PageWrapper from '@/components/PageWrapper';
+import TokenHandler from '@/components/TokenHandler';
 import SideNav from '@/components/side-navigation/SideNav';
 import type { ChildrenProps } from '@/types';
 
