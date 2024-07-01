@@ -15,7 +15,6 @@ async function fetchCompany(): Promise<Company> {
 }
 
 export default async function Page() {
-  const cookies = await getCookies();
   const company = await fetchCompany();
   return company.companyCourses.map(course => (
     <CourseCard key={course.courseId} course={course} />

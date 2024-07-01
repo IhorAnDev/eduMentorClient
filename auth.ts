@@ -28,7 +28,7 @@ async function refreshAccessToken(token) {
 
     if (!res.ok) {
       console.log('The token could not be refreshed!');
-      throw new Error('Token refresh failed', { cause: data.error });
+      throw new Error('Token refresh failed');
     }
 
     const decodedAccessToken = JSON.parse(
@@ -44,9 +44,9 @@ async function refreshAccessToken(token) {
       accessTokenExpires: decodedAccessToken.exp * 1000,
       error: '',
     };
-  } catch (error) {
-    console.error(error);
-    return { ...token, error: 'RefreshAccessTokenError' };
+  } catch (error: Error | any) {
+    console.error('Error during token refresh:', error);
+    return { ...token, error: 'RefreshAccessTokenError', errorMessage: error.message };
   }
 }
 export const config = {
