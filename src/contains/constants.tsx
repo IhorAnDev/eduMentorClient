@@ -40,4 +40,9 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     path: '/help',
     icon: <Icon icon="lucide:help-circle" width="24" height="24" />,
   },
+  {
+    title: 'Logout',
+    path: '/logout',
+    icon: <Icon icon="lucide:log-out" width="24" height="24" />,
+  },
 ];

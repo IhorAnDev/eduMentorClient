@@ -23,7 +23,6 @@ export default async function RootLayout({ children }: ChildrenProps) {
       <html lang="en">
         <body className={`bg-white ${inter.className}`}>
           <CookiesProvider>
-            <TokenHandler />
             {children}
           </CookiesProvider>
         </body>

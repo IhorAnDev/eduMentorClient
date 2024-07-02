@@ -1,4 +1,3 @@
-'use server';
 import { cookies, headers } from 'next/headers';
 import NextAuth from 'next-auth';
 import type { NextAuthConfig } from 'next-auth';
