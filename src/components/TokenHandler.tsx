@@ -8,7 +8,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 
-const ONE_HOUR_IN_MS = 59 * 60 * 1000;
+const ONE_HOUR_IN_MS = 60 * 1000;
 
 const TokenHandler = () => {
   const dispatch = useDispatch();

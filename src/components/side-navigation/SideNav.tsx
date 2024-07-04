@@ -23,13 +23,13 @@ const SideNav = () => {
   return (
     <div
       className={cx(
-        'group bg-gray-700 h-screen fixed border-r border-zinc-200 transition-all duration-300 z-20',
+        'group bg-gray-700 h-screen fixed border-r border-zinc-200 transition-all duration-300 z-20 flex flex-col justify-between',
         hover ? 'w-60' : 'w-16'
       )}
       onMouseEnter={() => dispatch(setHover(true))}
       onMouseLeave={() => dispatch(setHover(false))}
     >
-      <div className="flex flex-col space-y-6 w-full">
+      <div>
         <Link
           href="/"
           className="flex items-center justify-center md:justify-start pl-11 pr-6 border-b border-zinc-200 h-12 w-full"
@@ -42,11 +42,20 @@ const SideNav = () => {
           </div>
         </Link>
 
-        <div className="flex flex-col space-y-2 px-2 group-hover:px-2">
-          {SIDENAV_ITEMS.map((item, idx) => (
-            <MenuItem key={idx} item={item} hover={hover} />
-          ))}
+        <div className="flex pt-4 flex-col space-y-2 px-2 group-hover:px-2">
+          {SIDENAV_ITEMS.filter(item => item.title !== 'Logout').map(
+            (item, idx) => (
+              <MenuItem key={idx} item={item} hover={hover} />
+            )
+          )}
         </div>
+      </div>
+
+      <div className="px-2 mb-4">
+        <MenuItem
+          item={SIDENAV_ITEMS.find(item => item.title === 'Logout')!}
+          hover={hover}
+        />
       </div>
     </div>
   );
@@ -111,8 +120,9 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, hover }) => {
       ) : (
         <Link
           href={item.path}
-          className={cn('flex flex-row items-center p-2 rounded-lg hover:bg-purple-400 group', 
-          item.path === pathname ? 'bg-gray-500' : ''
+          className={cn(
+            'flex flex-row items-center p-2 rounded-lg hover:bg-purple-400 group',
+            item.path === pathname ? 'bg-gray-500' : ''
           )}
         >
           <div className="flex items-center">

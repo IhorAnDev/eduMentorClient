@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Company } from '@/types';
 import { setCompany } from '@/store/slices/CompanySlice';
-import { AppDispatch, RootState } from '@/store/store';
+import { AppDispatch } from '@/store/store';
 
 const CompanyPageClient = ({ company }: { company: Company }) => {
   const dispatch = useDispatch<AppDispatch>();
