@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const courseId = parseInt(params.id, 10);
-  const apiUrl = `${env.API_BASE_URL}/lesson/courses/${courseId}`;
+  const apiUrl = `${env.API_BASE_URL}/lessons/courses/${courseId}`;
   const token = request.headers.get('Authorization');
 
   if (!token) {
@@ -18,7 +18,7 @@ export async function GET(
     const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `${token}`,
       },
     });
 

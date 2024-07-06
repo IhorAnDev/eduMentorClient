@@ -78,3 +78,12 @@ export type SideNavItem = {
   submenu?: boolean;
   subMenuItems?: SideNavItem[];
 };
+
+export interface Lesson {
+  lessonId: number;
+  title: string;
+  description: string;
+  courseId: number;
+  isEnabled: boolean;
+  imageUrl: string;
+}

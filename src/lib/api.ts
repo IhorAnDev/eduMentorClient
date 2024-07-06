@@ -1,49 +1,56 @@
-import { auth } from 'auth';
-import env from '@/env';
+import { auth } from 'auth'
+import env from '@/env'
 
-async function getCompanyWithRetry(retries = 1): Promise<Response> {
-  const session = await auth();
+async function getAuthToken(): Promise<string> {
+  const session = await auth()
   if (!session?.user?.token) {
-    throw new Error('Unauthorized');
+    throw new Error('Unauthorized')
   }
+  return session.user.token
+}
 
-  const response = await fetch(`${env.NEXT_PUBLIC_API_BASE_URL}/api/company`, {
-    method: 'GET',
+async function createAuthFetchOptions(method: string = 'GET'): Promise<RequestInit> {
+  const token = await getAuthToken()
+  return {
+    method,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.user.token}`,
+      'Authorization': `Bearer ${token}`,
     },
-  });
-
-  if (!response.ok && retries > 0) {
-    console.log(`Request failed, retrying... (${retries} retries left)`);
-    await new Promise(resolve => setTimeout(resolve, 100));
-    return getCompanyWithRetry(retries - 1);
   }
+}
 
-  return response;
+async function authenticatedFetch(url: string, options: RequestInit, retries = 1): Promise<Response> {
+  try {
+    const response = await fetch(url, options)
+    if (!response.ok && retries > 0) {
+      console.log(`Request failed, retrying... (${retries} retries left)`)
+      await new Promise(resolve => setTimeout(resolve, 10)) 
+      return authenticatedFetch(url, options, retries - 1)
+    }
+    return response
+  } catch (error) {
+    if (retries > 0) {
+      console.log(`Request failed, retrying... (${retries} retries left)`)
+      await new Promise(resolve => setTimeout(resolve, 10)) 
+      return authenticatedFetch(url, options, retries - 1)
+    }
+    throw error
+  }
 }
 
 export async function getCompany() {
-  return getCompanyWithRetry();
+  const options = await createAuthFetchOptions()
+  return authenticatedFetch(`${env.NEXT_PUBLIC_API_BASE_URL}/api/company`, options)
 }
 
 export async function getLessonsByCourseId(courseId: number) {
-  const session = await auth();
-  if (!session?.user?.token) {
-    throw new Error('Unauthorized');
-  }
-
-  return await fetch(
-    `${env.NEXT_PUBLIC_API_BASE_URL}/api/course/${courseId}/lessons`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${session.user.token}`,
-      },
-    }
-  );
+  const options = await createAuthFetchOptions()
+  return authenticatedFetch(`${env.NEXT_PUBLIC_API_BASE_URL}/api/course/${courseId}/lessons`, options)
 }
 
-// Remove the getHeaders function if it's no longer needed
+export async function createSomething(data: any) {
+  const options = await createAuthFetchOptions('POST')
+  options.body = JSON.stringify(data)
+  return authenticatedFetch(`${env.NEXT_PUBLIC_API_BASE_URL}/api/something`, options)
+}

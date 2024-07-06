@@ -14,7 +14,7 @@ export default function CompanyLayout({ children }: ChildrenProps) {
         <MarginWidthWrapper>
           <Header />
           <HeaderMobile />
-          <PageWrapper>{children}</PageWrapper>
+          {children}
         </MarginWidthWrapper>
       </main>
     </div>

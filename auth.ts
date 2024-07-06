@@ -45,7 +45,11 @@ async function refreshAccessToken(token) {
     };
   } catch (error: Error | any) {
     console.error('Error during token refresh:', error);
-    return { ...token, error: 'RefreshAccessTokenError', errorMessage: error.message };
+    return {
+      ...token,
+      error: 'RefreshAccessTokenError',
+      errorMessage: error.message,
+    };
   }
 }
 export const config = {
@@ -117,23 +121,6 @@ export const config = {
             firstName: user.name as string,
             email: user.email as string,
           };
-
-          cookies().set({
-            name: `${prefix}xxx.access-token`,
-            value: user.token,
-            httpOnly: true,
-            sameSite: 'strict',
-            secure: process.env.NODE_ENV !== 'development',
-            path: '/',
-          });
-
-          cookies().set({
-            name: `${prefix}xxx.refresh-token`,
-            value: user.refreshToken,
-            httpOnly: true,
-            sameSite: 'strict',
-            secure: true,
-          } as any);
 
           return adaptUser;
         }
@@ -208,7 +195,7 @@ export const config = {
       return !!auth;
     },
   },
-  debug: process.env.NODE_ENV !== 'production',
+  debug: env.NODE_ENV !== 'production', // Ensure debug is enabled only in non-production environments
 } satisfies NextAuthConfig;
 
 export const { auth, handlers } = NextAuth(config);

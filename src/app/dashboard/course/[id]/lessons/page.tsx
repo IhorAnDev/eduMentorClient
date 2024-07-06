@@ -1,4 +1,8 @@
+import PageWrapper from '@/components/PageWrapper';
+import LessonComponent from '@/components/lessons/LessonComponent';
+import LessonsComponent from '@/components/lessons/LessonsComponent';
 import { getLessonsByCourseId } from '@/lib/api';
+import { Lesson } from '@/types';
 
 export default async function Page({ params }: { params: { id: string } }) {
   const courseId = parseInt(params.id, 10);
@@ -16,13 +20,13 @@ export default async function Page({ params }: { params: { id: string } }) {
   }
 
   return (
-    <main>
-      <h1>Lessons for Course {courseId}</h1>
-      <ul>
-        {lessons.map((lesson: any) => (
-          <li key={lesson.id}>{lesson.title}</li>
-        ))}
-      </ul>
+    <main className="flex justify-center">
+      <div className="max-w-screen-lg w-full">
+        <h1 className="text-2xl font-bold text-center mb-8">
+          Lessons for Course {courseId}
+        </h1>
+        <LessonsComponent lessons={lessons} />
+      </div>
     </main>
   );
 }
