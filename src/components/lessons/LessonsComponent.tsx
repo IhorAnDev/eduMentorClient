@@ -1,23 +1,28 @@
 import { Lesson } from '@/types';
 import LessonComponent from './LessonComponent';
+import env from '@/env';
+import { getLessonsByCourseId } from '@/lib/api';
 
-interface LessonsComponentProps {
-  lessons: Lesson[];
+async function fetchLessons(courseId: number) {
+  const response = await getLessonsByCourseId(courseId);
+  if (!response.ok) throw new Error('Failed to fetch lessons');
+  return response.json();
 }
 
-const LessonsComponent: React.FC<LessonsComponentProps> = ({ lessons }) => {
+export default async function LessonsComponent({
+  courseId,
+}: {
+  courseId: number;
+}) {
+  const lessons = await fetchLessons(courseId);
+
   return (
-    <ul className="flex flex-wrap gap-4">
-      {lessons.map(lesson => (
-        <li
-          key={lesson.lessonId}
-          className="w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.667rem)] lg:w-[calc(25%-0.75rem)]"
-        >
+    <ul className="flex flex-col space-y-4 w-full">
+      {lessons.map((lesson: Lesson) => (
+        <li key={lesson.lessonId} className="w-full">
           <LessonComponent {...lesson} />
         </li>
       ))}
     </ul>
   );
-};
-
-export default LessonsComponent;
+}
