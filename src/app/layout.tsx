@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google';
 import type { ChildrenProps } from '@/types';
 import { StoreProvider } from '@/store/StoreProvider';
 import { CookiesProvider } from 'next-client-cookies/server';
-import TokenHandler from '@/components/TokenHandler';
 
 export const metadata = {
   description: 'Education Platform. The best way to learn. Build. Grow.',

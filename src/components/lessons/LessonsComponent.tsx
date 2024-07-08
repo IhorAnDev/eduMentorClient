@@ -1,6 +1,5 @@
 import { Lesson } from '@/types';
 import LessonComponent from './LessonComponent';
-import env from '@/env';
 import { getLessonsByCourseId } from '@/lib/api';
 
 async function fetchLessons(courseId: number) {
